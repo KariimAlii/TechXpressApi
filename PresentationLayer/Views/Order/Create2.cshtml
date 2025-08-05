@@ -1,0 +1,47 @@
+﻿@using PresentationLayer.VMs.Orders
+
+@model CreateOrderVM
+
+<h2>Create New Order</h2>
+
+
+<form action="/Order/Create" method="post">
+    <div class="form-group">
+        <label>Customer: </label>
+        <select name="customerId">
+            @foreach (var customer in Model.Customers)
+            {
+                <option value="@customer.Id">@customer.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Products: </label>
+        @foreach (var product in Model.Products)
+        {
+            <div class="form-group">
+                <label>@product.Name: </label>
+                <input name="productAmounts[@product.Id]" type="number" class="form-control" min="0" value="0"/>
+            </div>
+
+            @*
+                productAmounts[1] = 2 (amount)
+                productAmounts[2] = 0
+                productAmounts[3] = 1
+
+                {
+                    productId: amount
+                }
+
+                {
+                    1: 2,
+                    2: 0,
+                    3: 1
+                }
+            *@
+        }
+    </div>
+
+    <button class="btn btn-success" type="submit">Create Order</button>
+</form>

@@ -1,0 +1,30 @@
+﻿@using PresentationLayer.VMs.Admin
+
+@{
+    ViewData["Title"] = "Assign User to Role";
+}
+@model UserRoleVM
+
+
+<form asp-action="AssignUserRole" method="post">
+    <div>
+        <label asp-for="UserId">User</label>
+        <select asp-for="UserId" asp-items="Model.Users" class="form-control"></select>
+    </div>
+
+
+    <div>
+        <label asp-for="RoleId">Role</label>
+        <select asp-for="RoleId" asp-items="Model.Roles" class="form-control"></select>
+    </div>
+
+
+    <button type="submit" class="btn btn-success">Assign Role</button>
+
+</form>
+
+
+@if(TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}

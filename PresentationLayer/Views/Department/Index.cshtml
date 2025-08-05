@@ -1,0 +1,54 @@
+﻿@using PresentationLayer.VMs.Departments
+
+
+@model List<DepartmentVM>
+
+
+@{
+    ViewData["Title"] = "Departments List";
+}
+
+<select 
+    class="form form-control"
+    id="dept"
+    name="dept"
+    asp-items="new SelectList(Model, nameof(DepartmentVM.Id), nameof(DepartmentVM.Name))"
+></select>
+
+<select class="form form-control" id="products" name="products">
+    <option value="0">Select a product</option>
+</select>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const departmentSelect = document.getElementById('dept');
+        const productSelect = document.getElementById('products');
+
+        departmentSelect.addEventListener('change', async function (event) {
+            debugger
+
+            const departmentId = event.target.value;
+
+            productSelect.innerHTML = `<option value="0">Select a product</option>`;
+
+            try {
+                var response = await fetch(`/Department/Products?deptId=${departmentId}`);
+
+                var products = await response.json();
+
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.Id;
+                    option.text = product.name;
+
+                    productSelect.add(option);
+                });
+            } catch(error) {
+                alert("!!!!");
+            }
+
+        });
+
+    });
+</script>

@@ -1,0 +1,9 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <a class="nav-link" asp-action="Logout" asp-controller="Account">Logout @User.Identity.Name</a>
+    @* User.Identity.Name ➡️➡️➡️ Claim c1 = new Claim(ClaimTypes.Name, user.Name); *@
+}
+else
+{
+    <a class="nav-link" asp-action="Login" asp-controller="Account">Login</a>
+}

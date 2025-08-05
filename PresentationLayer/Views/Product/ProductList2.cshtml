@@ -1,0 +1,129 @@
+﻿@using PresentationLayer.VMs.Products
+
+@model List<GetAllProductsVM>
+
+@{
+    Layout = "_Layout3";
+}
+@* https://getbootstrap.com/docs/4.0/content/tables/ *@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Image</th>
+            <th scope="col">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>
+                    <img src="/Images/@item.Image" style="width:50px; height:auto;"/>
+                </td>
+                <td>
+                    @* <a href="/Product/Details/@item.Id" class="btn btn-success">Details</a> *@
+                    <button 
+                        class="detailsButton btn btn-primary" 
+                        data-id="@item.Id"
+                        data-name="@item.Name"
+                        data-price="@item.Price"
+                        data-image="@item.Image"
+                    >
+                        Details
+                    </button>
+
+                    <button class="chooseButton btn btn-primary" data-product='@Json.Serialize(item)'>Choose</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="dynamicContent">
+    <p>Select a Product to see details</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailsButtons = document.querySelectorAll('.detailsButton');
+
+        detailsButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                // You can use this instead of button
+                const product = {
+                    id : button.getAttribute('data-id'),
+                    name: button.getAttribute('data-name'),
+                    price: button.getAttribute('data-price'),  // Number()
+                    image: button.getAttribute('data-image'),
+                };
+
+                try {
+
+                    debugger
+
+                    const response = await fetch(`/Product/GetProductPartial?id=${product.id}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(product)
+                        }
+                    );
+                    if(!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+
+                    var result = await response.text();
+
+                    document.getElementById('dynamicContent').innerHTML = result;
+
+                } catch (error) {
+                    alert("Failed to retrieve product details");
+                }
+            });
+        });
+
+        const chooseButtons = document.querySelectorAll('.chooseButton');
+
+        chooseButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                debugger
+                // You can use this instead of button
+                const product = JSON.parse(button.getAttribute('data-product'));  // json   ==deserialization==>  js object
+
+                try {
+
+                    debugger
+
+                    const response = await fetch(`/Product/GetProductPartial?id=${product.id}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(product)       //   js object  ===serialization==> json
+                        }
+                    );
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+
+                    var result = await response.text();
+
+                    document.getElementById('dynamicContent').innerHTML = result;
+
+                } catch (error) {
+                    alert("Failed to retrieve product details");
+                }
+            });
+        });
+    });
+</script>

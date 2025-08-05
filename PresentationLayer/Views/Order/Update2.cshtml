@@ -1,0 +1,44 @@
+﻿@using BusinessLayer.DTOs.Orders
+
+@model OrderDetailsDto
+
+@{
+    var products = new List<ProductModel>
+    {
+        new ProductModel {Id = 1, Name = "Product1"},
+        new ProductModel {Id = 2, Name = "Product2"},
+    };
+}
+@* <form action="/Order/Update/@Model.Id" method="post" enctype="multipart/form-data"> *@
+
+@*Tag Helper*@
+<form asp-action="Update" asp-controller="Order" asp-route-id="@Model.Id" method="post">
+
+
+    <div class="form-group">
+        @* <label for="Rating">Name : </label> *@
+        @Html.Label("Rating")
+
+
+        <input type="text" class="form-control" style="color:red;" id="Rating" name="Rating" value="@Model.Rating">
+        @Html.TextBox("Ratng", Model.Rating, new {@class="form-control", style="color:red;"})
+        @Html.TextBoxFor(x => x.Rating,  new { @class = "form-control", style = "color:red;" })
+
+        <input asp-for="Rating" class="form-control" style="color:red;" />
+    </div>
+    <div class="form-group">
+        <label for="Review">Price : </label>
+        <input type="text" class="form-control" id="Review" name="Review" value="@Model.Review">
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Order</button>
+
+    <select multiple>
+        @foreach (var product in products)
+        {
+            <option value="@product.Id">@product.Name</option>
+        }
+    </select>
+
+    <select asp-items='new SelectList(products, "Id", "Name")' multiple></select>
+</form>

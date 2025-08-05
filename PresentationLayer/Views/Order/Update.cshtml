@@ -1,0 +1,22 @@
+﻿@using BusinessLayer.DTOs.Orders
+
+@model OrderDetailsDto
+
+@{
+    Layout = "_Layout2";
+}
+
+<form action="/Order/Update/@Model.Id" method="post" enctype="multipart/form-data">
+
+
+    <div class="form-group">
+        <label for="Rating">Name : </label>
+        <input type="text" class="form-control" id="Rating" name="Rating" value="@Model.Rating">
+    </div>
+    <div class="form-group">
+        <label for="Review">Price : </label>
+        <input type="text" class="form-control" id="Review" name="Review" value="@Model.Review">
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Order</button>
+</form>

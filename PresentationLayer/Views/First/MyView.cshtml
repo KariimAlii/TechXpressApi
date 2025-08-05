@@ -1,0 +1,55 @@
+﻿<h1>Demo Application</h1>
+
+<style>
+    h1 {
+        background-color: cyan;
+        color:red;
+    }
+</style>
+
+<script>    
+       console.log("hiiiiiii")
+</script>
+
+@* <script>
+    alert("Helooo")
+</script> *@
+
+<!--  Razor Engine  -->
+
+@{
+    // C# Code
+    // Block Of Code
+    int x = 5;
+    int y = x + 7;
+    Console.WriteLine("jajajaja");
+}
+
+<!--  Inlince Code  -->
+
+<h2>
+    @x
+</h2>
+
+
+<!--  Conditional Statements  -->
+
+@if(x > y)
+{
+    <h2>
+        x = @x is greater than y = @y
+    </h2>
+}
+else
+{
+    <h2>
+        y = @y is greater than x = @x
+    </h2>
+}
+
+<ul>
+    @for (int i = 0; i < 10; i++)
+    {
+      <li>i = @i</li>
+    }
+</ul>
