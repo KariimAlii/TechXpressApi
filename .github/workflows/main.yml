@@ -38,10 +38,12 @@ jobs:
     - name: Install Web Deploy
       run: choco install webdeploy -y --no-progress
 
-    - name: Run Web Deploy
-      shell: cmd  # Force CMD instead of PowerShell
-      run: |
-        "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync ^
-        -source:contentPath="%GITHUB_WORKSPACE%\publish" ^
-        -dest:contentPath="site33211",ComputerName="https://site33211.siteasp.net/msdeploy.axd",UserName="site33211",Password="Qi7@!9SdcL+5",AuthType="Basic" ^
-        -allowUntrusted
+    - name: Upload via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4
+      with:
+        server: site33211.siteasp.net
+        username: site33211
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: 21
+        local-dir: ./publish/
+        server-dir: /wwwroot/  
