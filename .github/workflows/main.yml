@@ -40,8 +40,7 @@ jobs:
 
     - name: Deploy via MSDeploy
       run: |
-        "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
-         -verb:sync `
+        & "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync `
          -source:contentPath='./publish/' `
          -dest:contentPath='${{ secrets.MONSTERASP_SITE_NAME }}',ComputerName='${{ secrets.MONSTERASP_PUBLISH_URL }}',UserName='${{ secrets.MONSTERASP_DEPLOY_USER }}',Password='${{ secrets.MONSTERASP_DEPLOY_PASSWORD }}',AuthType='Basic' `
          -allowUntrusted
