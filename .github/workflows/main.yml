@@ -39,12 +39,9 @@ jobs:
       run: choco install webdeploy -y --no-progress
 
     - name: Run Web Deploy
+      shell: cmd  # Force CMD instead of PowerShell
       run: |
-        "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync `
-        -source:contentPath='./publish' `
-        -dest:contentPath='site33211', `
-          ComputerName='https://site33211.siteasp.net:8172/msdeploy.axd', `
-          UserName='site33211', `
-          Password='Qi7@!9SdcL+5', `
-          AuthType='Basic' `
+        "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync ^
+        -source:contentPath="%GITHUB_WORKSPACE%\publish" ^
+        -dest:contentPath="site33211",ComputerName="https://site33211.siteasp.net:8172/msdeploy.axd",UserName="site33211",Password="Qi7@!9SdcL+5",AuthType="Basic" ^
         -allowUntrusted
