@@ -40,7 +40,24 @@ jobs:
 
     - name: Deploy via MSDeploy
       run: |
-        & "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync `
-         -source:contentPath='./publish/' `
+        $sourcePath = Resolve-Path -Path './publish/'
+        Write-Host "Source path: $sourcePath"
+        
+        if (-not (Test-Path $sourcePath)) {
+          throw "Publish folder not found at $sourcePath"
+        }
+    
+        & "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" @"
+        -verb:sync
+        -source:contentPath='$sourcePath'
+        -dest:contentPath='${{ secrets.MONSTERASP_SITE_NAME }}',
+              ComputerName='https://${{ secrets.MONSTERASP_PUBLISH_URL }}:8172/msdeploy.axd',
+              UserName='${{ secrets.MONSTERASP_DEPLOY_USER }}',
+              Password='${{ secrets.MONSTERASP_DEPLOY_PASSWORD }}',
+              AuthType='Basic'
+        -allowUntrusted
+        -retryAttempts:3
+        -verbose
+        "@
          -dest:contentPath='${{ secrets.MONSTERASP_SITE_NAME }}',ComputerName='${{ secrets.MONSTERASP_PUBLISH_URL }}',UserName='${{ secrets.MONSTERASP_DEPLOY_USER }}',Password='${{ secrets.MONSTERASP_DEPLOY_PASSWORD }}',AuthType='Basic' `
          -allowUntrusted
