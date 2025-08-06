@@ -34,16 +34,13 @@ jobs:
     # Publish to folder
     - name: Publish
       run: dotnet publish ./PresentationLayer.Api/PresentationLayer.Api.csproj -c Release -o ./publish/ --no-build
-    
-    - name: Install Web Deploy
-      run: choco install webdeploy -y --no-progress
 
     - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.0  # Explicit version
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.0
       with:
-        server: site33211.siteasp.net
-        username: site33211
-        password: W!s9#6NbDh5?
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
         port: 21
         local-dir: ./publish/
         server-dir: ./wwwroot/  # Monster ASP's directory
