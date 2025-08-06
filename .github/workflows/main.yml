@@ -35,10 +35,13 @@ jobs:
     - name: Publish
       run: dotnet publish ./PresentationLayer.Api/PresentationLayer.Api.csproj -c Release -o ./publish/ --no-build
     
-    # Deploy using publish profile
-    - name: Deploy to Monster ASP
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'site33211'  # From your msdeploySite value
-        publish-profile: ${{ secrets.MONSTERASP_PUBLISH_PROFILE }}
-        package: './publish/'
+    - name: Install Web Deploy
+      run: choco install webdeploy -y --no-progress
+
+    - name: Deploy via MSDeploy
+      run: |
+        "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+         -verb:sync `
+         -source:contentPath='./publish/' `
+         -dest:contentPath='${{ secrets.MONSTERASP_SITE_NAME }}',ComputerName='${{ secrets.MONSTERASP_PUBLISH_URL }}',UserName='${{ secrets.MONSTERASP_DEPLOY_USER }}',Password='${{ secrets.MONSTERASP_DEPLOY_PASSWORD }}',AuthType='Basic' `
+         -allowUntrusted
