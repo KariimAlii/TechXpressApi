@@ -48,3 +48,48 @@ jobs:
         removeAdditionalFiles: true
         takeAppOffline: true
         appOfflineTemplate: '<html><body><h1>Site updating, please wait...</h1></body></html>'
+
+name: Deploy to Monster ASP
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_NAME: 'YourApiProjectName'  # Replace with your actual project name
+  PUBLISH_FOLDER: './publish'
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Set up .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0'
+        
+    # Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    # Build the project
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    
+    # Publish to folder
+    - name: Publish
+      run: dotnet publish ./PresentationLayer.Api/PresentationLayer.Api.csproj -c Release -o ./publish/ --no-build
+    
+    # Deploy using publish profile
+    - name: Deploy to Monster ASP
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'site33211'  # From your msdeploySite value
+        publish-profile: ${{ secrets.MONSTERASP_PUBLISH_PROFILE }}
+        package: './publish/'
